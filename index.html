@@ -1,446 +1,648 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>The Only 15-Minute Local SEO Strategy - DIYSEO</title>
-  
-  <style>
-    :root { 
-      --teal: #3E5C76; 
-      --teal-light: #E8EEF2; 
-      --coral: #C08A2E; 
-      --coral-light: #F5EBD9; 
-      --cream: #FAFAF9; 
-      --dark: #1F2530; 
-      --gray: #5B6472; 
-      --line: #E4E7EB; 
-      --sans: 'Inter', 'Helvetica Neue', Arial, sans-serif; 
-      --serif: 'Fraunces', Georgia, serif; 
-    }
-    * { box-sizing: border-box; }
-    body { 
-      margin: 0; 
-      background: var(--cream); 
-      color: var(--dark); 
-      font-family: var(--sans); 
-      line-height: 1.5; 
-    }
-    .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px 100px; }
-    
-    /* Cover */ 
-    .cover { text-align: center; padding: 56px 24px 30px; } 
-    .kicker { 
-      font-size: 12px; 
-      font-weight: 700; 
-      letter-spacing: .14em; 
-      color: var(--coral); 
-      margin-bottom: 16px;       text-transform: uppercase; 
-    } 
-    .cover h1 { 
-      font-family: var(--serif); 
-      font-size: 36px;       color: var(--teal); 
-      margin: 0 0 14px; 
-      line-height: 1.12; 
-      font-weight: 700; 
-    } 
-    .cover p.sub { 
-      font-size: 15px; 
-      color: var(--dark); 
-      max-width: 480px;       margin: 0 auto; 
-    } 
-    .rule { 
-      width: 60px; 
-      height: 2px; 
-      background: var(--coral); 
-      margin: 26px auto; 
-      border: none; 
-    }
+package html
 
-    /* Sticky shimmering progress bar */ 
-    .progress-bar-wrap { 
-      position: sticky; 
-      top: 0; 
-      z-index: 50; 
-      background: var(--cream); 
-      border-bottom: 1px solid var(--line); 
-      padding: 12px 24px; 
-    } 
-    .progress-inner { 
-      max-width: 760px; 
-      margin: 0 auto; 
-      display: flex; 
-      align-items: center; 
-      gap: 14px; 
-    } 
-    .progress-track { 
-      flex: 1; 
-      height: 8px; 
-      background: var(--teal-light); 
-      border-radius: 6px; 
-      overflow: hidden; 
-    } 
-    .progress-fill { 
-      height: 100%; 
-      width: 0%; 
-      position: relative; 
-      overflow: hidden; 
-      background: linear-gradient(90deg, var(--teal), var(--coral)); 
-      box-shadow: 0 0 10px 1px rgba(192,138,46,.4);       transition: width .5s ease, box-shadow .3s ease; 
-    } 
-    .progress-fill::after { 
-      content: ""; 
-      position: absolute;       inset: 0; 
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);       width: 40%;       transform: translateX(-150%);       animation: shimmer 2.6s ease-in-out infinite;     }     @keyframes shimmer {       0%{transform:translateX(-150%);}       60%,100%{transform:translateX(350%);}     }     .progress-label {       font-size: 12px;       color: var(--teal);       font-weight: 700;       white-space: nowrap;     }
+import (
+	"fmt"
+	"html"
+	"io"
+	"sort"
+	"strconv"
+	"strings"
+	"sync"
 
-    /* Section head */ 
-    .sec-head {       display: flex;       gap: 20px;       align-items: flex-start;       margin: 40px 0 22px;     }     .sec-num {       font-size: 40px;       font-weight: 700;       color: var(--coral-light);       line-height: 1;       transition: color .2s ease;     }     .sec-head:hover .sec-num {       color: var(--coral);     }     .sec-title {       font-family: var(--serif);       font-size: 21px;       font-weight: 700;       color: var(--teal);       margin: 0 0 4px;     }     .sec-sub {       font-style: italic;       font-size: 13.5px;       color: var(--gray);       margin: 0;     }
-    
-    .why {       background: var(--teal-light);       border-radius: 8px;       padding: 14px 18px;       margin: 0 0 20px;     }     .why-label {       font-size: 10.5px;       font-weight: 700;       letter-spacing: .08em;       text-transform: uppercase;       color: var(--teal);       margin-bottom: 7px;     }     .why ul {       margin: 0;       padding-left: 18px;       font-size: 13.5px;       line-height: 1.55;       color: var(--dark);     }     .why a, p a {       color: var(--coral);       font-weight: 700;       text-decoration: none;       border-bottom: 1.4px solid var(--coral);     }     .why a:hover, p a:hover {       opacity: .75;     }
+	"github.com/alecthomas/chroma/v2"
+)
 
-    /* Checklist */     .checklist { list-style: none; margin: 0; padding: 0; }     .checklist li {       display: flex;       gap: 14px;       align-items: flex-start;       padding: 12px 10px;       margin: 0 -10px;       border-bottom: 1px solid var(--line);       border-radius: 6px;       transition: background .15s ease;     }     .checklist li:hover { background: var(--teal-light); }     .checklist li:last-child { border-bottom: none; }     .checklist input[type=checkbox] {       appearance: none;       -webkit-appearance: none;       width: 19px;       height: 19px;       min-width: 19px;       margin-top: 2px;       border: 1.6px solid var(--teal);       border-radius: 4px;       cursor: pointer;       position: relative;       background: #fff;       transition: box-shadow .3s ease, background .15s ease;     }     .checklist input[type=checkbox]:checked {       background: var(--teal);       box-shadow: 0 0 0 5px rgba(62,92,118,.25);     }     .checklist input[type=checkbox]:checked::after {       content: "";       position: absolute;       left: 5px;       top: 1px;       width: 5px;       height: 10px;       border: solid white;       border-width: 0 2px 2px 0;       transform: rotate(45deg);     }     .checklist label { font-size: 14.5px; cursor: pointer; }
+// Option sets an option of the HTML formatter.
+type Option func(f *Formatter)
 
-    .callout {       background: var(--teal-light);       border-left: 3px solid var(--teal);       padding: 12px 16px;       margin-top: 16px;       font-size: 13.5px;       color: var(--teal);       font-weight: 700;       border-radius: 0 6px 6px 0;     }     .note { font-size: 12.5px; color: var(--gray); margin-top: 12px; }     .subhead { font-weight: 700; color: var(--teal); font-size: 16px; margin: 32px 0 8px; }
+// Standalone configures the HTML formatter for generating a standalone HTML document.
+func Standalone(b bool) Option { return func(f *Formatter) { f.standalone = b } }
 
-    /* Reference table */     .reftable { width: 100%; border-collapse: collapse; margin: 14px 0 6px; font-size: 12.5px; }     .reftable th {       background: linear-gradient(135deg, var(--teal), #2c4459);       color: #fff;       font-size: 10.5px;       text-align: left;       padding: 9px 10px;       font-weight: 700;     }     .reftable th:nth-child(2) { background: linear-gradient(135deg, var(--coral), #8f6a22); }     .reftable th:nth-child(3) { background: linear-gradient(135deg, var(--sage), #446750); }     .reftable td { border: 1px solid var(--line); padding: 9px 10px; vertical-align: top; }     .reftable td:nth-child(2) { color: var(--coral); font-weight: 700; }     .reftable tr:nth-child(even) td { background: #fff; }     .reftable tr:nth-child(odd) td { background: var(--cream); }     .reftable tr:hover td { background: var(--teal-light); }     .table-scroll { overflow-x: auto; }
+// ClassPrefix sets the CSS class prefix.
+func ClassPrefix(prefix string) Option { return func(f *Formatter) { f.prefix = prefix } }
 
-    /* Troubleshoot */     .troubleshoot {       background: #fff;       border: 1px solid var(--line);       border-left: 3.5px solid var(--teal);       border-radius: 6px;       padding: 11px 14px;       margin: 18px 0 6px;       font-size: 13px;     }     .troubleshoot summary {       font-weight: 700;       color: var(--teal);       cursor: pointer;       list-style: none;       display: flex;       justify-content: space-between;       align-items: center;     }     .troubleshoot summary::-webkit-details-marker { display: none; }     .troubleshoot summary::after {       content: '+';       font-size: 15px;       font-weight: 700;       color: var(--coral);     }     .troubleshoot[open] summary::after { content: '\2212'; }     .troubleshoot-content {       margin-top: 9px;       color: var(--dark);       line-height: 1.55;       border-top: 1px solid var(--line);       padding-top: 8px;       font-size: 12.8px;     }     .troubleshoot-content p + p { margin-top: 8px; }
+// WithClasses emits HTML using CSS classes, rather than inline styles.
+func WithClasses(b bool) Option { return func(f *Formatter) { f.Classes = b } }
 
-    /* Template Code Box Preview */     .template-box {       background: #fff;       border: 1px solid var(--line);       border-left: 3.5px solid var(--sage);       border-radius: 6px;       padding: 14px 16px;       margin: 14px 0;     }     .template-label {       font-size: 10.5px;       font-weight: 700;       letter-spacing: .08em;       text-transform: uppercase;       color: var(--sage);       margin-bottom: 8px;     }     .template-fill {       font-family: 'Courier New', monospace;       font-size: 12.8px;       line-height: 1.65;       color: var(--dark);       background: var(--cream);       border-radius: 4px;       padding: 10px 12px;       white-space: pre-wrap;     }     .template-fill b { color: var(--coral); font-weight: 700; }     .template-note { font-size: 12px; color: var(--gray); margin: 8px 0 0; }
+// WithAllClasses disables an optimisation that omits redundant CSS classes.
+func WithAllClasses(b bool) Option { return func(f *Formatter) { f.allClasses = b } }
 
-    /* Promo code card and layout styles */
-    /* Promo Box - Pixel Perfect Recreation of the dark card from promo-code-findme.gif */
-    .promo-card {
-      background: var(--dark);
-      color: #fff;
-      border: 2px solid var(--coral);
-      border-radius: 12px;
-      padding: 32px 24px;
-      margin: 40px 0 20px;
-      position: relative;
-      text-align: center;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    }
-    
-    /* Limited Time Badge top-right */
-    .promo-badge-limited {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: #E54B4B;
-      color: #ffffff;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 12px;
-    }
-    
-    .promo-header {
-      font-family: var(--sans);
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: .12em;
-      color: var(--coral);
-      text-transform: uppercase;
-      margin-top: 10px;
-      margin-bottom: 8px;
-    }
-    
-    .promo-price-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-    
-    .promo-price-old {
-      font-size: 24px;
-      color: var(--gray);
-      text-decoration: line-through;
-      position: relative;
-    }
-    /* Gold line strike-through */
-    .promo-price-old::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 50%;
-      width: 100%;
-      height: 2px;
-      background: var(--coral);
-      transform: rotate(-10deg);
-    }
-    
-    .promo-price-new {
-      font-family: var(--serif);
-      font-size: 48px;
-      font-weight: 700;
-      color: var(--coral);
-    }
-    
-    /* Copyable Promo Code container */
-    .promo-code-container {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      background: transparent;
-      border: 1.5px solid var(--coral);
-      border-radius: 8px;
-      padding: 10px 24px;
-      margin-bottom: 20px;
-      cursor: pointer;
-      transition: background 0.15s ease, border-color 0.15s ease;
-    }
-    .promo-code-container:hover {
-      background: rgba(192, 138, 46, 0.08);
-      border-color: #d49a37;
-    }
-    
-    .promo-code-text {
-      font-family: var(--serif);
-      font-size: 20px;
-      font-weight: 800;
-      color: #ffffff;
-      letter-spacing: 0.05em;
-      transition: color 0.15s ease;
-    }
-    
-    .promo-copy-icon {
-      width: 18px;
-      height: 18px;
-      fill: var(--coral);
-      display: inline-block;
-      vertical-align: middle;
-    }
-    
-    /* Solid purchase button */
-    .promo-btn {
-      display: block;
-      width: 100%;
-      max-width: 320px;
-      margin: 0 auto;
-      background: var(--coral);
-      color: var(--dark);
-      font-weight: 700;
-      font-size: 15px;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-      padding: 14px 24px;
-      border-radius: 8px;
-      text-decoration: none;
-      box-shadow: 0 4px 12px rgba(192,138,46,0.3);
-      transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
-      cursor: pointer;
-    }
-    .promo-btn:hover {
-      background: #d49a37;
-      transform: translateY(-1.5px);
-      box-shadow: 0 6px 16px rgba(192,138,46,0.45);
-    }
-    
-    /* Responsive Desktop-Only QR Box */
-    .promo-qr-card {
-      background: #ffffff;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 12px;
-      width: 140px;
-      margin: 20px auto 0;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-    .promo-qr-card img {
-      width: 100px;
-      height: 100px;
-      display: block;
-      margin: 0 auto 6px;
-    }
-    .promo-qr-card span {
-      font-size: 9px;
-      color: var(--gray);
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      display: block;
-    }
-    @media (max-width: 600px) {
-      .promo-qr-card {
-        display: none;
-      }
-    }
+// WithCustomCSS sets user's custom CSS styles.
+func WithCustomCSS(css map[chroma.TokenType]string) Option {
+	return func(f *Formatter) {
+		f.customCSS = css
+	}
+}
 
-    footer {       text-align: center;       color: var(--gray);       font-size: 12px;       margin-top: 44px;     }   </style>
-</head>
-<body>
+// WithCSSComments adds prefixe comments to the css classes. Defaults to true.
+func WithCSSComments(b bool) Option { return func(f *Formatter) { f.writeCSSComments = b } }
 
-  <!-- Sticky progress bar at the top of the viewport -->
-  <div class="progress-bar-wrap">
-    <div class="progress-inner">
-      <div class="progress-track">
-        <div id="demoProgress" class="progress-fill" style="width: 30%;"></div>
-      </div>
-      <div id="demoLabel" class="progress-label">YOUR STRENGTH: 30%</div>
-    </div>
-  </div>
+// TabWidth sets the number of characters for a tab. Defaults to 8.
+func TabWidth(width int) Option { return func(f *Formatter) { f.tabWidth = width } }
 
-  <div class="wrap">
-    
-    <header class="cover">
-      <div class="kicker">Checklist Guide Created by DIYSEO</div>
-      <h1>The Only 15-Minute Local SEO Strategy</h1>
-      <p class="sub">A visual, interactive step-by-step blueprint to optimize your Google Business Profile, beat local competition, and get found locally.</p>
-      <hr class="rule">
-    </header>
+// PreventSurroundingPre prevents the surrounding pre tags around the generated code.
+func PreventSurroundingPre(b bool) Option {
+	return func(f *Formatter) {
+		f.preventSurroundingPre = b
 
-    <!-- Interactive Checklist Area (Grounded Strictly in your Styles) -->
-    <div class="sec-head">
-      <div class="sec-num">01</div>
-      <div>
-        <h2 class="sec-title">Interactive Progress Checklist</h2>
-        <p class="sec-sub">Check off your daily tasks to watch your optimization strength grow in real-time.</p>
-      </div>
-    </div>
+		if b {
+			f.preWrapper = nopPreWrapper
+		} else {
+			f.preWrapper = defaultPreWrapper
+		}
+	}
+}
 
-    <div class="why">
-      <div class="why-label">Why This Matters</div>
-      <ul>
-        <li>No technical skills, web developers, or expensive agency retainers required.</li>
-        <li>Follow simple, step-by-step actions to build immediate listing relevance.</li>
-      </ul>
-    </div>
+// InlineCode creates inline code wrapped in a code tag.
+func InlineCode(b bool) Option {
+	return func(f *Formatter) {
+		f.inlineCode = b
+		f.preWrapper = preWrapper{
+			start: func(code bool, styleAttr string) string {
+				if code {
+					return fmt.Sprintf(`<code%s>`, styleAttr)
+				}
 
-    <ul class="checklist">
-      <li>
-        <input type="checkbox" id="task1" checked onclick="updateProgress()">
-        <label for="task1">Audit existing business profile details against authentic benchmarks.</label>
-      </li>
-      <li>
-        <input type="checkbox" id="task2" onclick="updateProgress()">
-        <label for="task2">Lock down pre-written FAQ templates under your listing's Q&A tab.</label>
-      </li>
-      <li>
-        <input type="checkbox" id="task3" onclick="updateProgress()">
-        <label for="task3">Schedule seasonal promotions using high-converting promo templates.</label>
-      </li>
-    </ul>
+				return ``
+			},
+			end: func(code bool) string {
+				if code {
+					return `</code>`
+				}
 
-    <!-- Section 2: Proactive FAQ Shield -->
-    <div class="sec-head">
-      <div class="sec-num">02</div>
-      <div>
-        <h2 class="sec-title">The Proactive Q&A Shield</h2>
-        <p class="sec-sub">Stop strangers or competitors from hijacking your public profile questions.</p>
-      </div>
-    </div>
+				return ``
+			},
+		}
+	}
+}
 
-    <p>Google permits public users to answer questions on your listing. By publishing these pre-written templates yourself, you lock in the authoritative, correct answers forever:</p>
+// WithPreWrapper allows control of the surrounding pre tags.
+func WithPreWrapper(wrapper PreWrapper) Option {
+	return func(f *Formatter) {
+		f.preWrapper = wrapper
+	}
+}
 
-    <div class="template-box">
-      <div class="template-label">Template FAQ #1</div>
-      <div class="template-fill">Q: Do you offer free estimates or quotes? <br>A: <b>[Yes/No]</b> — <b>[how to request one, e.g. "call us or message us here and we'll get back to you within a day"]</b>.</div>
-    </div>
+// WrapLongLines wraps long lines.
+func WrapLongLines(b bool) Option {
+	return func(f *Formatter) {
+		f.wrapLongLines = b
+	}
+}
 
-    <div class="template-box">
-      <div class="template-label">Template FAQ #2</div>
-      <div class="template-fill">Q: What makes you different from other businesses nearby? <br>A: <b>[Your honest answer — e.g. licensed and insured, 10+ years experience, satisfaction guarantee]</b>.</div>
-    </div>
-    
-    <p class="template-note">Post these yourself under your Q&A tab to block misleading public edits.</p>
+// WithLineNumbers formats output with line numbers.
+func WithLineNumbers(b bool) Option {
+	return func(f *Formatter) {
+		f.lineNumbers = b
+	}
+}
 
-    <!-- Section 3: Seasonal Promotion Templates -->
-    <div class="sec-head">
-      <div class="sec-num">03</div>
-      <div>
-        <h2 class="sec-title">Seasonal Promotion Templates</h2>
-        <p class="sec-sub">Copy-and-paste promotional formulas to capture high-intent local searchers.</p>
-      </div>
-    </div>
+// LineNumbersInTable will, when combined with WithLineNumbers, separate the line numbers
+// and code in table td's, which make them copy-and-paste friendly.
+func LineNumbersInTable(b bool) Option {
+	return func(f *Formatter) {
+		f.lineNumbersInTable = b
+	}
+}
 
-    <div class="template-box">
-      <div class="template-label">Seasonal Rotations Inside the Full Guide</div>
-      <div class="template-fill"><b>Selected rotation formulas included in the strategy:</b>
-2. Valentine's / Feb: Treat someone you love this month — <b>[offer or gift idea]</b>. <b>[Call to action]</b>.
-3. Spring: Spring's here, and so is <b>[seasonal service/offer]</b>. <b>[Call to action]</b>.
-4. Summer: Beat the heat with <b>[seasonal offer]</b>. <b>[Call to action]</b>.
-5. Back-to-School: Back-to-school season means <b>[relevant offer or reminder]</b>. <b>[Call to action]</b>.
-6. Fall / Halloween: Getting into the spirit of the season with <b>[seasonal item or offer]</b>. <b>[Call to action]</b>.
-7. Holiday Season: The holidays are here — <b>[gift cards, holiday hours, or offer]</b>. <b>[Call to action]</b>.
-8. Black Friday / Year-End Sale: <b>[discount]</b>% off this weekend only. <b>[Call to action]</b>.
-9. Local Event: We're proud to <b>[sponsor/take part in]</b> <b>[local event]</b> this month. Stop by and say hi. <b>[Call to action]</b>.
-10. Business Milestone: We just hit <b>[milestone — years in business, customers served]</b>. Thank you! <b>[Call to action]</b>.</div>
-    </div>
+// WithLinkableLineNumbers decorates the line numbers HTML elements with an "id"
+// attribute so they can be linked.
+func WithLinkableLineNumbers(b bool, prefix string) Option {
+	return func(f *Formatter) {
+		f.linkableLineNumbers = b
+		f.lineNumbersIDPrefix = prefix
+	}
+}
 
-    <!-- Promo Box - Pixel Perfect Recreation of the dark card from promo-code-findme.gif -->
-    <div class="promo-card">
-      <div class="promo-badge-limited">Limited Time</div>
-      <div class="promo-header">Promo Code</div>
-      
-      <div class="promo-price-wrap">
-        <span class="promo-price-old">$12</span>
-        <span class="promo-price-new">$9</span>
-      </div>
+// HighlightLines higlights the given line ranges with the Highlight style.
+//
+// A range is the beginning and ending of a range as 1-based line numbers, inclusive.
+func HighlightLines(ranges [][2]int) Option {
+	return func(f *Formatter) {
+		f.highlightRanges = ranges
+		sort.Sort(f.highlightRanges)
+	}
+}
 
-      <!-- Copyable Coupon Code Box -->
-      <div class="promo-code-container" onclick="copyPromoCode()" title="Click to copy code">
-        <span class="promo-code-text" id="promoCodeText">FINDME</span>
-        <svg class="promo-copy-icon" viewBox="0 0 24 24">
-          <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-        </svg>
-      </div>
+// BaseLineNumber sets the initial number to start line numbering at. Defaults to 1.
+func BaseLineNumber(n int) Option {
+	return func(f *Formatter) {
+		f.baseLineNumber = n
+	}
+}
 
-      <!-- Gumroad Overlay Checkout Button -->
-      <a href="https://diyseosupport.gumroad.com/l/zodcm/FINDME?referrer=web" class="promo-btn">
-        CLAIM $9 OFFER NOW
-      </a>
+// New HTML formatter.
+func New(options ...Option) *Formatter {
+	f := &Formatter{
+		baseLineNumber:   1,
+		preWrapper:       defaultPreWrapper,
+		writeCSSComments: true,
+	}
+	f.styleCache = newStyleCache(f)
+	for _, option := range options {
+		option(f)
+	}
+	return f
+}
 
-      <!-- Responsive Desktop-Only QR Code Container using trackable Short.io link -->
-      <div class="promo-qr-card">
-        <img src="$9linkqr.png" alt="Scan to buy guide">
-        <span>Scan with phone to buy</span>
-      </div>
-    </div>
+// PreWrapper defines the operations supported in WithPreWrapper.
+type PreWrapper interface {
+	// Start is called to write a start <pre> element.
+	// The code flag tells whether this block surrounds
+	// highlighted code. This will be false when surrounding
+	// line numbers.
+	Start(code bool, styleAttr string) string
 
-    <footer>
-      <p>&copy; 2026 DIYSEO. All rights reserved.</p>
-      <p style="font-size: 11px; margin-top: 4px; color: var(--gray);">Grounded strictly in the Only 15-Minute Local SEO Strategy blueprint.</p>
-    </footer>
+	// End is called to write the end </pre> element.
+	End(code bool) string
+}
 
-  </div>
+type preWrapper struct {
+	start func(code bool, styleAttr string) string
+	end   func(code bool) string
+}
 
-  <script>
-    function updateProgress() {
-      const checkboxes = document.querySelectorAll('.checklist input[type="checkbox"]');
-      const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
-      const total = checkboxes.length;
-      const pct = Math.round((checked / total) * 100);
-      
-      document.getElementById('demoProgress').style.width = pct + '%';
-      document.getElementById('demoLabel').textContent = 'YOUR STRENGTH: ' + pct + '%';
-    }
-    // Set initial percentage
-    updateProgress();
+func (p preWrapper) Start(code bool, styleAttr string) string {
+	return p.start(code, styleAttr)
+}
 
-    // Copy to clipboard with success feedback state
-    function copyPromoCode() {
-      navigator.clipboard.writeText("FINDME").then(() => {
-        const textSpan = document.getElementById("promoCodeText");
-        const originalText = textSpan.textContent;
-        textSpan.textContent = "COPIED!";
-        textSpan.style.color = "#FED100"; // Beautiful highlight color
-        setTimeout(() => {
-          textSpan.textContent = originalText;
-          textSpan.style.color = "#ffffff";
-        }, 1500);
-      });
-    }
-  </script>
+func (p preWrapper) End(code bool) string {
+	return p.end(code)
+}
 
-  <!-- Gumroad Overlay JavaScript SDK -->
-  <script src="https://gumroad.com/js/embed.js"></script>
+var (
+	nopPreWrapper = preWrapper{
+		start: func(code bool, styleAttr string) string { return "" },
+		end:   func(code bool) string { return "" },
+	}
+	defaultPreWrapper = preWrapper{
+		start: func(code bool, styleAttr string) string {
+			if code {
+				return fmt.Sprintf(`<pre%s><code>`, styleAttr)
+			}
 
-</body>
-</html>
+			return fmt.Sprintf(`<pre%s>`, styleAttr)
+		},
+		end: func(code bool) string {
+			if code {
+				return `</code></pre>`
+			}
+
+			return `</pre>`
+		},
+	}
+)
+
+// Formatter that generates HTML.
+type Formatter struct {
+	styleCache            *styleCache
+	standalone            bool
+	prefix                string
+	Classes               bool // Exported field to detect when classes are being used
+	allClasses            bool
+	customCSS             map[chroma.TokenType]string
+	writeCSSComments      bool
+	preWrapper            PreWrapper
+	inlineCode            bool
+	preventSurroundingPre bool
+	tabWidth              int
+	wrapLongLines         bool
+	lineNumbers           bool
+	lineNumbersInTable    bool
+	linkableLineNumbers   bool
+	lineNumbersIDPrefix   string
+	highlightRanges       highlightRanges
+	baseLineNumber        int
+}
+
+type highlightRanges [][2]int
+
+func (h highlightRanges) Len() int           { return len(h) }
+func (h highlightRanges) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h highlightRanges) Less(i, j int) bool { return h[i][0] < h[j][0] }
+
+func (f *Formatter) Format(w io.Writer, style *chroma.Style, iterator chroma.Iterator) (err error) {
+	return f.writeHTML(w, style, iterator.Tokens())
+}
+
+// We deliberately don't use html/template here because it is two orders of magnitude slower (benchmarked).
+//
+// OTOH we need to be super careful about correct escaping...
+func (f *Formatter) writeHTML(w io.Writer, style *chroma.Style, tokens []chroma.Token) (err error) { // nolint: gocyclo
+	css := f.styleCache.get(style, true)
+	if f.standalone {
+		fmt.Fprint(w, "<html>\n")
+		if f.Classes {
+			fmt.Fprint(w, "<style type=\"text/css\">\n")
+			err = f.WriteCSS(w, style)
+			if err != nil {
+				return err
+			}
+			fmt.Fprintf(w, "body { %s; }\n", css[chroma.Background])
+			fmt.Fprint(w, "</style>")
+		}
+		fmt.Fprintf(w, "<body%s>\n", f.styleAttr(css, chroma.Background))
+	}
+
+	wrapInTable := f.lineNumbers && f.lineNumbersInTable
+
+	lines := chroma.SplitTokensIntoLines(tokens)
+	lineDigits := len(strconv.Itoa(f.baseLineNumber + len(lines) - 1))
+	highlightIndex := 0
+
+	if wrapInTable {
+		// List line numbers in its own <td>
+		fmt.Fprintf(w, "<div%s>\n", f.styleAttr(css, chroma.PreWrapper))
+		fmt.Fprintf(w, "<table%s><tr>", f.styleAttr(css, chroma.LineTable))
+		fmt.Fprintf(w, "<td%s>\n", f.styleAttr(css, chroma.LineTableTD))
+		fmt.Fprintf(w, "%s", f.preWrapper.Start(false, f.styleAttr(css, chroma.PreWrapper)))
+		for index := range lines {
+			line := f.baseLineNumber + index
+			highlight, next := f.shouldHighlight(highlightIndex, line)
+			if next {
+				highlightIndex++
+			}
+			if highlight {
+				fmt.Fprintf(w, "<span%s>", f.styleAttr(css, chroma.LineHighlight))
+			}
+
+			fmt.Fprintf(w, "<span%s%s>%s\n</span>", f.styleAttr(css, chroma.LineNumbersTable), f.lineIDAttribute(line), f.lineTitleWithLinkIfNeeded(css, lineDigits, line))
+
+			if highlight {
+				fmt.Fprintf(w, "</span>")
+			}
+		}
+		fmt.Fprint(w, f.preWrapper.End(false))
+		fmt.Fprint(w, "</td>\n")
+		fmt.Fprintf(w, "<td%s>\n", f.styleAttr(css, chroma.LineTableTD, "width:100%"))
+	}
+
+	fmt.Fprintf(w, "%s", f.preWrapper.Start(true, f.styleAttr(css, chroma.PreWrapper)))
+
+	highlightIndex = 0
+	for index, tokens := range lines {
+		// 1-based line number.
+		line := f.baseLineNumber + index
+		highlight, next := f.shouldHighlight(highlightIndex, line)
+		if next {
+			highlightIndex++
+		}
+
+		if !(f.preventSurroundingPre || f.inlineCode) {
+			// Start of Line
+			fmt.Fprint(w, `<span`)
+
+			if highlight {
+				// Line + LineHighlight
+				if f.Classes {
+					fmt.Fprintf(w, ` class="%s %s"`, f.class(chroma.Line), f.class(chroma.LineHighlight))
+				} else {
+					fmt.Fprintf(w, ` style="%s %s"`, css[chroma.Line], css[chroma.LineHighlight])
+				}
+				fmt.Fprint(w, `>`)
+			} else {
+				fmt.Fprintf(w, "%s>", f.styleAttr(css, chroma.Line))
+			}
+
+			// Line number
+			if f.lineNumbers && !wrapInTable {
+				fmt.Fprintf(w, "<span%s%s>%s</span>", f.styleAttr(css, chroma.LineNumbers), f.lineIDAttribute(line), f.lineTitleWithLinkIfNeeded(css, lineDigits, line))
+			}
+
+			fmt.Fprintf(w, `<span%s>`, f.styleAttr(css, chroma.CodeLine))
+		}
+
+		for _, token := range tokens {
+			html := html.EscapeString(token.String())
+			attr := f.styleAttr(css, token.Type)
+			if attr != "" {
+				html = fmt.Sprintf("<span%s>%s</span>", attr, html)
+			}
+			fmt.Fprint(w, html)
+		}
+
+		if !(f.preventSurroundingPre || f.inlineCode) {
+			fmt.Fprint(w, `</span>`) // End of CodeLine
+
+			fmt.Fprint(w, `</span>`) // End of Line
+		}
+	}
+	fmt.Fprintf(w, "%s", f.preWrapper.End(true))
+
+	if wrapInTable {
+		fmt.Fprint(w, "</td></tr></table>\n")
+		fmt.Fprint(w, "</div>\n")
+	}
+
+	if f.standalone {
+		fmt.Fprint(w, "\n</body>\n")
+		fmt.Fprint(w, "</html>\n")
+	}
+
+	return nil
+}
+
+func (f *Formatter) lineIDAttribute(line int) string {
+	if !f.linkableLineNumbers {
+		return ""
+	}
+	return fmt.Sprintf(" id=\"%s\"", f.lineID(line))
+}
+
+func (f *Formatter) lineTitleWithLinkIfNeeded(css map[chroma.TokenType]string, lineDigits, line int) string {
+	title := fmt.Sprintf("%*d", lineDigits, line)
+	if !f.linkableLineNumbers {
+		return title
+	}
+	return fmt.Sprintf("<a%s href=\"#%s\">%s</a>", f.styleAttr(css, chroma.LineLink), f.lineID(line), title)
+}
+
+func (f *Formatter) lineID(line int) string {
+	return fmt.Sprintf("%s%d", f.lineNumbersIDPrefix, line)
+}
+
+func (f *Formatter) shouldHighlight(highlightIndex, line int) (bool, bool) {
+	next := false
+	for highlightIndex < len(f.highlightRanges) && line > f.highlightRanges[highlightIndex][1] {
+		highlightIndex++
+		next = true
+	}
+	if highlightIndex < len(f.highlightRanges) {
+		hrange := f.highlightRanges[highlightIndex]
+		if line >= hrange[0] && line <= hrange[1] {
+			return true, next
+		}
+	}
+	return false, next
+}
+
+func (f *Formatter) class(t chroma.TokenType) string {
+	for t != 0 {
+		if cls, ok := chroma.StandardTypes[t]; ok {
+			if cls != "" {
+				return f.prefix + cls
+			}
+			return ""
+		}
+		t = t.Parent()
+	}
+	if cls := chroma.StandardTypes[t]; cls != "" {
+		return f.prefix + cls
+	}
+	return ""
+}
+
+func (f *Formatter) styleAttr(styles map[chroma.TokenType]string, tt chroma.TokenType, extraCSS ...string) string {
+	if f.Classes {
+		cls := f.class(tt)
+		if cls == "" {
+			return ""
+		}
+		return fmt.Sprintf(` class="%s"`, cls)
+	}
+	if _, ok := styles[tt]; !ok {
+		tt = tt.SubCategory()
+		if _, ok := styles[tt]; !ok {
+			tt = tt.Category()
+			if _, ok := styles[tt]; !ok {
+				return ""
+			}
+		}
+	}
+	css := []string{styles[tt]}
+	css = append(css, extraCSS...)
+	return fmt.Sprintf(` style="%s"`, strings.Join(css, ";"))
+}
+
+func (f *Formatter) tabWidthStyle() string {
+	if f.tabWidth != 0 && f.tabWidth != 8 {
+		return fmt.Sprintf("-moz-tab-size: %[1]d; -o-tab-size: %[1]d; tab-size: %[1]d;", f.tabWidth)
+	}
+	return ""
+}
+
+func (f *Formatter) writeCSSRule(w io.Writer, comment string, selector string, styles string) error {
+	if styles == "" {
+		return nil
+	}
+	if f.writeCSSComments && comment != "" {
+		if _, err := fmt.Fprintf(w, "/* %s */ ", comment); err != nil {
+			return err
+		}
+	}
+	if _, err := fmt.Fprintf(w, "%s { %s }\n", selector, styles); err != nil {
+		return err
+	}
+	return nil
+}
+
+// WriteCSS writes CSS style definitions (without any surrounding HTML).
+func (f *Formatter) WriteCSS(w io.Writer, style *chroma.Style) error {
+	css := f.styleCache.get(style, false)
+
+	// Special-case background as it is mapped to the outer ".chroma" class.
+	if err := f.writeCSSRule(w, chroma.Background.String(), fmt.Sprintf(".%sbg", f.prefix), css[chroma.Background]); err != nil {
+		return err
+	}
+	// Special-case PreWrapper as it is the ".chroma" class.
+	if err := f.writeCSSRule(w, chroma.PreWrapper.String(), fmt.Sprintf(".%schroma", f.prefix), css[chroma.PreWrapper]); err != nil {
+		return err
+	}
+	// Special-case code column of table to expand width.
+	if f.lineNumbers && f.lineNumbersInTable {
+		selector := fmt.Sprintf(".%schroma .%s:last-child", f.prefix, f.class(chroma.LineTableTD))
+		if err := f.writeCSSRule(w, chroma.LineTableTD.String(), selector, "width: 100%;"); err != nil {
+			return err
+		}
+	}
+	// Special-case line number highlighting when targeted.
+	if f.lineNumbers || f.lineNumbersInTable {
+		targetedLineCSS := StyleEntryToCSS(style.Get(chroma.LineHighlight))
+		for _, tt := range []chroma.TokenType{chroma.LineNumbers, chroma.LineNumbersTable} {
+			comment := fmt.Sprintf("%s targeted by URL anchor", tt)
+			selector := fmt.Sprintf(".%schroma .%s:target", f.prefix, f.class(tt))
+			if err := f.writeCSSRule(w, comment, selector, targetedLineCSS); err != nil {
+				return err
+			}
+		}
+	}
+	tts := []int{}
+	for tt := range css {
+		tts = append(tts, int(tt))
+	}
+	sort.Ints(tts)
+	for _, ti := range tts {
+		tt := chroma.TokenType(ti)
+		switch tt {
+		case chroma.Background, chroma.PreWrapper:
+			continue
+		}
+		class := f.class(tt)
+		if class == "" {
+			continue
+		}
+		if err := f.writeCSSRule(w, tt.String(), fmt.Sprintf(".%schroma .%s", f.prefix, class), css[tt]); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (f *Formatter) styleToCSS(style *chroma.Style) map[chroma.TokenType]string {
+	classes := map[chroma.TokenType]string{}
+	bg := style.Get(chroma.Background)
+	// Convert the style.
+	for t := range chroma.StandardTypes {
+		entry := style.Get(t)
+		if t != chroma.Background {
+			entry = entry.Sub(bg)
+		}
+
+		// Inherit from custom CSS provided by user
+		tokenCategory := t.Category()
+		tokenSubCategory := t.SubCategory()
+		if t != tokenCategory {
+			if css, ok := f.customCSS[tokenCategory]; ok {
+				classes[t] = css
+			}
+		}
+		if tokenCategory != tokenSubCategory {
+			if css, ok := f.customCSS[tokenSubCategory]; ok {
+				classes[t] += css
+			}
+		}
+		// Add custom CSS provided by user
+		if css, ok := f.customCSS[t]; ok {
+			classes[t] += css
+		}
+
+		if !f.allClasses && entry.IsZero() && classes[t] == `` {
+			continue
+		}
+
+		styleEntryCSS := StyleEntryToCSS(entry)
+		if styleEntryCSS != `` && classes[t] != `` {
+			styleEntryCSS += `;`
+		}
+		classes[t] = styleEntryCSS + classes[t]
+	}
+	classes[chroma.Background] += `;` + f.tabWidthStyle()
+	classes[chroma.PreWrapper] += classes[chroma.Background]
+	classes[chroma.PreWrapper] += ` -webkit-text-size-adjust: none;`
+	// Make PreWrapper a grid to show highlight style with full width.
+	if len(f.highlightRanges) > 0 && f.customCSS[chroma.PreWrapper] == `` {
+		classes[chroma.PreWrapper] += `display: grid;`
+	}
+	// Make PreWrapper wrap long lines.
+	if f.wrapLongLines {
+		classes[chroma.PreWrapper] += `white-space: pre-wrap; word-break: break-word;`
+	}
+	lineNumbersStyle := `white-space: pre; -webkit-user-select: none; user-select: none; margin-right: 0.4em; padding: 0 0.4em 0 0.4em;`
+	// All rules begin with default rules followed by user provided rules
+	classes[chroma.Line] = `display: flex;` + classes[chroma.Line]
+	classes[chroma.LineNumbers] = lineNumbersStyle + classes[chroma.LineNumbers]
+	classes[chroma.LineNumbersTable] = lineNumbersStyle + classes[chroma.LineNumbersTable]
+	classes[chroma.LineTable] = "border-spacing: 0; padding: 0; margin: 0; border: 0;" + classes[chroma.LineTable]
+	classes[chroma.LineTableTD] = "vertical-align: top; padding: 0; margin: 0; border: 0;" + classes[chroma.LineTableTD]
+	classes[chroma.LineLink] = "outline: none; text-decoration: none; color: inherit" + classes[chroma.LineLink]
+	return classes
+}
+
+// StyleEntryToCSS converts a chroma.StyleEntry to CSS attributes.
+func StyleEntryToCSS(e chroma.StyleEntry) string {
+	styles := []string{}
+	if e.Colour.IsSet() {
+		styles = append(styles, "color: "+e.Colour.String())
+	}
+	if e.Background.IsSet() {
+		styles = append(styles, "background-color: "+e.Background.String())
+	}
+	if e.Bold == chroma.Yes {
+		styles = append(styles, "font-weight: bold")
+	}
+	if e.Italic == chroma.Yes {
+		styles = append(styles, "font-style: italic")
+	}
+	if e.Underline == chroma.Yes {
+		styles = append(styles, "text-decoration: underline")
+	}
+	return strings.Join(styles, "; ")
+}
+
+// Compress CSS attributes - remove spaces, transform 6-digit colours to 3.
+func compressStyle(s string) string {
+	parts := strings.Split(s, ";")
+	out := []string{}
+	for _, p := range parts {
+		p = strings.Join(strings.Fields(p), " ")
+		p = strings.Replace(p, ": ", ":", 1)
+		if strings.Contains(p, "#") {
+			c := p[len(p)-6:]
+			if c[0] == c[1] && c[2] == c[3] && c[4] == c[5] {
+				p = p[:len(p)-6] + c[0:1] + c[2:3] + c[4:5]
+			}
+		}
+		out = append(out, p)
+	}
+	return strings.Join(out, ";")
+}
+
+const styleCacheLimit = 32
+
+type styleCacheEntry struct {
+	style      *chroma.Style
+	compressed bool
+	cache      map[chroma.TokenType]string
+}
+
+type styleCache struct {
+	mu sync.Mutex
+	// LRU cache of compiled (and possibly compressed) styles. This is a slice
+	// because the cache size is small, and a slice is sufficiently fast for
+	// small N.
+	cache []styleCacheEntry
+	f     *Formatter
+}
+
+func newStyleCache(f *Formatter) *styleCache {
+	return &styleCache{f: f}
+}
+
+func (l *styleCache) get(style *chroma.Style, compress bool) map[chroma.TokenType]string {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+
+	// Look for an existing entry.
+	for i := len(l.cache) - 1; i >= 0; i-- {
+		entry := l.cache[i]
+		if entry.style == style && entry.compressed == compress {
+			// Top of the cache, no need to adjust the order.
+			if i == len(l.cache)-1 {
+				return entry.cache
+			}
+			// Move this entry to the end of the LRU
+			copy(l.cache[i:], l.cache[i+1:])
+			l.cache[len(l.cache)-1] = entry
+			return entry.cache
+		}
+	}
+
+	// No entry, create one.
+	cached := l.f.styleToCSS(style)
+	if !l.f.Classes {
+		for t, style := range cached {
+			cached[t] = compressStyle(style)
+		}
+	}
+	if compress {
+		for t, style := range cached {
+			cached[t] = compressStyle(style)
+		}
+	}
+	// Evict the oldest entry.
+	if len(l.cache) >= styleCacheLimit {
+		l.cache = l.cache[0:copy(l.cache, l.cache[1:])]
+	}
+	l.cache = append(l.cache, styleCacheEntry{style: style, cache: cached, compressed: compress})
+	return cached
+}
